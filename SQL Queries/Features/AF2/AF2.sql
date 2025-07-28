@@ -8,7 +8,8 @@ WITH durations AS (
 
 hour_buckets AS (
   SELECT 
-    DATE_TRUNC('hour', "bookStartDateTime") AS hour_slot,
+   -- DATE_TRUNC('hour', "bookStartDateTime") AS hour_slot,
+  Date_part('hour', "bookStartDateTime") AS hour_slot,
     COUNT(*) AS count
   FROM "Booking"
   WHERE "userID" = %(user_id)s
@@ -28,5 +29,6 @@ agg_duration AS (
 
 SELECT 
   agg_duration.avg_duration_mins,
-  TO_CHAR(top_hour.hour_slot, 'HH24:MI') AS most_booked_hour
+  --TO_CHAR(top_hour.hour_slot, 'HH24:MI') AS most_booked_hour
+  TO_CHAR(TIMESTAMP '2000-01-01' + top_hour.hour_slot * INTERVAL '1 hour', 'HH12:MI AM') AS most_booked_hour
 FROM agg_duration, top_hour;
