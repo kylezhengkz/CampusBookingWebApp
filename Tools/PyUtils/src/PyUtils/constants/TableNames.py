@@ -7,3 +7,6 @@ class TableNames(Enum):
     Booking = "Booking"
     Room = "Room"
     Cancellation = "Cancellation"
+    AdminAddLog = "AdminAddLog"
+    AdminEditLog = "AdminEditLog"
+    AdminDeleteLog = "AdminDeleteLog"

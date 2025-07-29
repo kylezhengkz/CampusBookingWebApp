@@ -1,7 +1,7 @@
-DROP TRIGGER IF EXISTS validBooking ON "Booking";
-DROP FUNCTION IF EXISTS BookingParticipantsCheckFunc();
-DROP TRIGGER IF EXISTS preventUserOverlap ON "Booking";
-DROP FUNCTION IF EXISTS BookingUserOverlapCheckFunc();
+DROP TRIGGER IF EXISTS validBooking ON {BookingTable};
+DROP FUNCTION IF EXISTS {BookingParticipantsCheckFunc}();
+DROP TRIGGER IF EXISTS preventUserOverlap ON {BookingTable};
+DROP FUNCTION IF EXISTS {BookingUserOverlapCheckFunc}();
 
 CREATE FUNCTION {BookingParticipantsCheckFunc}() 
     RETURNS trigger
@@ -27,13 +27,13 @@ FOR EACH ROW
     EXECUTE FUNCTION {BookingParticipantsCheckFunc}();
 
 
-CREATE FUNCTION BookingUserOverlapCheckFunc()
+CREATE FUNCTION {BookingUserOverlapCheckFunc}()
 RETURNS trigger
 LANGUAGE plpgsql AS $func$
 BEGIN
     IF EXISTS (
         SELECT 1
-        FROM "Booking" b
+        FROM {BookingTable} b
         WHERE b."userID" = NEW."userID"
           AND b."bookingID" <> NEW."bookingID"
           AND DATE(b."bookStartDateTime") = DATE(NEW."bookStartDateTime")
@@ -42,7 +42,7 @@ BEGIN
               AND NEW."bookEndDateTime" > b."bookStartDateTime"
           )
           AND NOT EXISTS (
-              SELECT 1 FROM "Cancellation" c
+              SELECT 1 FROM {CancellationTable} c
               WHERE c."bookingID" = b."bookingID"
           )
     ) THEN
@@ -54,6 +54,6 @@ END;
 $func$;
 
 CREATE TRIGGER preventUserOverlap
-BEFORE INSERT OR UPDATE ON "Booking"
+BEFORE INSERT OR UPDATE ON {BookingTable}
 FOR EACH ROW
-EXECUTE FUNCTION BookingUserOverlapCheckFunc();
+EXECUTE FUNCTION {BookingUserOverlapCheckFunc}();
