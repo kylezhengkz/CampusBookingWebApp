@@ -22,4 +22,10 @@ CREATE TABLE {BookingTable} (
 );
 
 CREATE INDEX IF NOT EXISTS idx_user_start_time
-ON "Booking"("userID", "bookStartDateTime");
+ON {BookingTable}("userID", "bookStartDateTime");
+
+CREATE INDEX IF NOT EXISTS idx_user
+ON {BookingTable}("userID");
+
+CREATE INDEX IF NOT EXISTS idx_room
+ON {BookingTable}("roomID");
