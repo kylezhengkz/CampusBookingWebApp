@@ -27,7 +27,7 @@ class DashboardService(BaseAPIService):
     def getDashboardMetrics(self, user_id: Optional[str]) -> Tuple[bool, dict]:
         try:
             userUUID = uuid.UUID(user_id)
-        except ValueError:
+        except:
             return [False, "Invalid UUID format for user ID."]
 
         sqlPath = os.path.join(PU.Paths.SQLFeaturesFolder.value, "AF2/AF2.sql")
