@@ -165,7 +165,7 @@ class Importer(DBTool):
             dbBuilder.buildDB()
 
         if (buildLevel.value >= ImportLevel.Tables.value):
-            print(f"Constructing all tables...")
+            print(f"Constructing all tables and views...")
             dbBuilder.build()
 
         print(f"Inserting User Data...")
