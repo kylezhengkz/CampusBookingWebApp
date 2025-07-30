@@ -115,8 +115,8 @@ export function Header() {
                         onClose={handleMenuClose}
                         >             
                         <MenuItem onClick={() => { navigate("/home"); handleMenuClose(); }}>Home</MenuItem>
-                        <MenuItem onClick={() => { navigate("/viewBooking"); handleMenuClose(); }}>View Booking</MenuItem>
-                        <MenuItem onClick={() => { navigate("/cancelBooking"); handleMenuClose(); }}>Cancel Booking</MenuItem>
+                        <MenuItem onClick={() => { navigate("/viewBooking"); handleMenuClose(); }}>View/Book Rooms</MenuItem>
+                        <MenuItem onClick={() => { navigate("/cancelBooking"); handleMenuClose(); }}>View/Cancel Bookings</MenuItem>
                         <MenuItem onClick={() => { navigate("/bookingHistory"); handleMenuClose(); }}>Booking History</MenuItem>
                         <MenuItem onClick={() => { navigate("/editAccount"); handleMenuClose(); }}>Edit Account</MenuItem>
                       </Menu>
