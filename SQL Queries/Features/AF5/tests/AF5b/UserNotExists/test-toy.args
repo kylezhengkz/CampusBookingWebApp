@@ -1,0 +1,8 @@
+{
+    "args": [
+        "deaddead-dead-dead-dead-deaddeaddead",
+        "oldPassword",
+        "newPassword"
+    ],
+    "kwargs": {}
+}   

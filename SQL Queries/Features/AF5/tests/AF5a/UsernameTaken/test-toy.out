@@ -1,0 +1,2 @@
+duplicate key value violates unique constraint "User_username_key"
+DETAIL:  Key (username)=(Charlie Brown) already exists.
