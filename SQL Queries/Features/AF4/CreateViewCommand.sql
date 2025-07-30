@@ -13,9 +13,9 @@ SELECT
   b."country",
   b."postalCode",
   'add' AS "action"
-FROM "AdminAddLog" a
-JOIN "Room" r ON a."roomID" = r."roomID"
-JOIN "Building" b ON r."buildingID" = b."buildingID"
+FROM {AdminAddLogTable} a
+JOIN {RoomTable} r ON a."roomID" = r."roomID"
+JOIN {BuildingTable} b ON r."buildingID" = b."buildingID"
 
 UNION ALL
 
@@ -33,9 +33,9 @@ SELECT
   b."country",
   b."postalCode",
   'edit' AS "action"
-FROM "AdminEditLog" e
-JOIN "Room" r ON e."roomID" = r."roomID"
-JOIN "Building" b ON r."buildingID" = b."buildingID"
+FROM {AdminEditLogTable} e
+JOIN {RoomTable} r ON e."roomID" = r."roomID"
+JOIN {BuildingTable} b ON r."buildingID" = b."buildingID"
 
 UNION ALL
 
@@ -53,4 +53,4 @@ SELECT
   d."country",
   d."postalCode",
   'delete' AS "action"
-FROM "AdminDeleteLog" d;
+FROM {AdminDeleteLogTable} d;

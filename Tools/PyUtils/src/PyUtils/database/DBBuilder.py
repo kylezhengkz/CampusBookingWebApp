@@ -64,6 +64,24 @@ class DBBuilder():
         sql = self._dbTool.readSQLFile(file)
         sql = SQL(sql).format(**identifiers)
         return self._buildTable(table, sql, vars = vars, closeConn = closeConn, connData = connData, installExtensions = installExtensions)
+    
+    # _buildView(sql, vars, closeConn, connData): Builds some generic views
+    def _buildView(self, sql: Union[str, SQL], vars: Optional[Union[List[Any], Dict[str, Any]]] = None, closeConn: bool = True, 
+                   connData: Optional[DBConnData] = None) -> Tuple[DBConnData, Optional[psycopg2.extensions.cursor]]:
+        connData, cursor, error = self._dbTool.executeSQL(sql, vars = vars, closeConn = closeConn, commit = True, connData = connData)
+        return connData, cursor
+    
+    # _buildViewFromFile(view, identifiers, vars, closeConn, connData, installExtensions): Builds some generic view based on some file
+    def _buildViewFromFile(self, file: str, identifiers: Optional[Dict[str, Identifier]] = None, 
+                            vars: Optional[Union[List[Any], Dict[str, Any]]] = None, closeConn: bool = True, 
+                            connData: Optional[DBConnData] = None) -> Tuple[DBConnData, Optional[psycopg2.extensions.cursor]]:
+        
+        if (identifiers is None):
+            identifiers = {}
+
+        sql = self._dbTool.readSQLFile(file)
+        sql = SQL(sql).format(**identifiers)
+        return self._buildView(sql, vars = vars, closeConn = closeConn, connData = connData)
 
     # _buildTrigger(sql, vars, closeConn, connData): Builds a trigger
     def _buildTrigger(self, sql: Union[str, SQL], vars: Optional[Union[List[Any], Dict[str, Any]]] = None, closeConn: bool = True, 
@@ -116,6 +134,14 @@ class DBBuilder():
     def buildAdminOnlyInsertTrigger(self, connData: Optional[DBConnData] = None, closeConn: bool = True):
         sqlFile = os.path.join(Paths.SQLTriggerCreationFolder.value, "adminOnlyInsert.sql")
         self._buildTriggerFromFile(sqlFile, identifiers = self.NameIdentifiers, connData = connData, closeConn = closeConn)
+
+    # ============================================================
+    # ================= Views ====================================
+
+    # buildAdminLogView(connData, closeConn): Build the view for the admin room change logs
+    def buildAdminRoomLogView(self, connData: Optional[DBConnData] = None, closeConn: bool = True):
+        sqlFile = os.path.join(Paths.SQLFeaturesFolder.value, "AF4", "CreateViewCommand.sql")
+        self._buildViewFromFile(sqlFile, identifiers = self.NameIdentifiers, connData = connData, closeConn = closeConn)
 
     # ============================================================
     # ================= Tables ===================================
@@ -197,6 +223,11 @@ class DBBuilder():
         self.buildAdminEditLogTable(installExtensions = False, withTriggers = withTriggers, withTriggerFunc = False)
         self.buildAdminDeleteLogTable(installExtensions = False, withTriggers = withTriggers, withTriggerFunc = False)
 
+    # buildViews(): Builds all the necessary views
+    def buildViews(self):
+        connData = self._dbTool.getConn()
+        self.buildAdminRoomLogView(connData = connData)
+
     # buildTriggers(); Builds all the necessary triggers
     def buildTriggers(self):
         connData = self._dbTool.getConn()
@@ -229,5 +260,6 @@ class DBBuilder():
             self.buildDB()
 
         self.buildTables()
+        self.buildViews()
 
     # ============================================================
